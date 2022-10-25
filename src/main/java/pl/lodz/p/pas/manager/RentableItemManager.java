@@ -4,6 +4,8 @@ import java.util.List;
 import javax.inject.Inject;
 import pl.lodz.p.pas.dto.RentableItemDto;
 import pl.lodz.p.pas.dto.mapper.RentableItemDtoMapper;
+import pl.lodz.p.pas.exception.ItemNotFoundException;
+import pl.lodz.p.pas.exception.RentedItemException;
 import pl.lodz.p.pas.model.Rent;
 import pl.lodz.p.pas.model.resource.RentableItem;
 import pl.lodz.p.pas.repository.RentRepo;
@@ -25,7 +27,7 @@ public class RentableItemManager {
 
     public RentableItem getRentableItem(long id) {
         return rentableItemRepo.findByID(id)
-                .orElseThrow(() -> new RuntimeException("RentableItem not found"));
+                .orElseThrow(() -> new ItemNotFoundException("RentableItem not found"));
     }
 
     public void deleteRentableItem(Long id) {
@@ -35,13 +37,13 @@ public class RentableItemManager {
         rents.forEach(rent -> {
             rent.getRentableItem().forEach(rentableItem -> {
                 if (rentableItem.getId().equals(id)) {
-                    throw new RuntimeException("RentableItem is rented");
+                    throw new RentedItemException("RentableItem is rented");
                 }
             });
         });
 
         RentableItem rentableItem = rentableItemRepo.findByID(id)
-                .orElseThrow(() -> new RuntimeException("RentableItem not found"));
+                .orElseThrow(() -> new ItemNotFoundException("RentableItem not found"));
 
         rentableItemRepo.remove(rentableItem);
     }
@@ -53,7 +55,7 @@ public class RentableItemManager {
 
     public void updateRentableItem(Long id, RentableItemDto rentableItemDto) {
         RentableItem rentableItem = rentableItemRepo.findByID(id)
-                .orElseThrow(() -> new RuntimeException("RentableItem not found"));
+                .orElseThrow(() -> new ItemNotFoundException("RentableItem not found"));
 
         List<RentableItem> rentableItems = rentableItemRepo.getItems();
         int index = rentableItems.indexOf(rentableItem);

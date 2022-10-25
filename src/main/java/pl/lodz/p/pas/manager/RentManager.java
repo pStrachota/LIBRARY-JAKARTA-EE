@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
 import pl.lodz.p.pas.dto.RentDto;
+import pl.lodz.p.pas.exception.DeactivatedUserException;
+import pl.lodz.p.pas.exception.ExceededLimitException;
+import pl.lodz.p.pas.exception.ItemNotFoundException;
 import pl.lodz.p.pas.model.Rent;
 import pl.lodz.p.pas.model.resource.RentableItem;
 import pl.lodz.p.pas.model.user.Client;
@@ -29,17 +32,17 @@ public class RentManager {
     public void addRent(RentDto rentDto) {
 
         Client client = (Client) userRepo.findByID(rentDto.getClientId())
-                .orElseThrow(() -> new RuntimeException("Client not found"));
+                .orElseThrow(() -> new ItemNotFoundException("Client not found"));
 
         if (!client.isActive()) {
-            throw new RuntimeException("Client is deactivated");
+            throw new DeactivatedUserException("Client is deactivated");
         }
 
         List<RentableItem> rentableItems = new ArrayList<>();
 
         rentDto.getRentableItemIds().forEach(rentableItemId -> {
             RentableItem rentableItem = rentableItemRepo.findByID(rentableItemId)
-                    .orElseThrow(() -> new RuntimeException("RentableItem not found"));
+                    .orElseThrow(() -> new ItemNotFoundException("RentableItem not found"));
             rentableItems.add(rentableItem);
         });
 
@@ -58,7 +61,7 @@ public class RentManager {
         if (client.getClientType().getMaxItems() > clientRents) {
             currentRentRepo.add(rent);
         } else {
-            throw new RuntimeException("Client has reached max items");
+            throw new ExceededLimitException("Client has reached max items");
         }
 
     }
@@ -69,13 +72,13 @@ public class RentManager {
 
     public Rent getRent(long id) {
         return currentRentRepo.findByID(id)
-                .orElseThrow(() -> new RuntimeException("Rent not found"));
+                .orElseThrow(() -> new ItemNotFoundException("Rent not found"));
     }
 
     public void removeRent(Long id) {
 
         Rent rent = currentRentRepo.findByID(id)
-                .orElseThrow(() -> new RuntimeException("Rent not found"));
+                .orElseThrow(() -> new ItemNotFoundException("Rent not found"));
 
         Client client = rent.getClient();
         rent.setEndTime(LocalDateTime.now());
@@ -96,13 +99,13 @@ public class RentManager {
     public void updateRent(Long id, RentDto rentDto) {
 
         Rent rent = currentRentRepo.findByID(id)
-                .orElseThrow(() -> new RuntimeException("Rent not found"));
+                .orElseThrow(() -> new ItemNotFoundException("Rent not found"));
 
         Client client = (Client) userRepo.findByID(rentDto.getClientId())
-                .orElseThrow(() -> new RuntimeException("Client not found"));
+                .orElseThrow(() -> new ItemNotFoundException("Client not found"));
 
         if (!client.isActive()) {
-            throw new RuntimeException("Client is not active");
+            throw new DeactivatedUserException("Client is not active");
         }
 
         List<Long> rentableItemIds = rentDto.getRentableItemIds();
@@ -110,7 +113,7 @@ public class RentManager {
 
         rentableItemIds.forEach(rentableItemId -> {
             RentableItem rentableItem = rentableItemRepo.findByID(rentableItemId)
-                    .orElseThrow(() -> new RuntimeException("RentableItem not found"));
+                    .orElseThrow(() -> new ItemNotFoundException("RentableItem not found"));
             rentableItems.add(rentableItem);
         });
 

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import javax.enterprise.context.ApplicationScoped;
+import pl.lodz.p.pas.exception.DuplicatedLoginException;
 import pl.lodz.p.pas.model.user.Address;
 import pl.lodz.p.pas.model.user.Admin;
 import pl.lodz.p.pas.model.user.Client;
@@ -40,7 +41,7 @@ public class UserRepo extends Repo<User> {
 
     private void validateUserLogin(User item) {
         if (users.stream().anyMatch(user -> user.getLogin().equals(item.getLogin()))) {
-            throw new RuntimeException("User with this login already exists");
+            throw new DuplicatedLoginException("User with this login already exists");
         }
     }
 

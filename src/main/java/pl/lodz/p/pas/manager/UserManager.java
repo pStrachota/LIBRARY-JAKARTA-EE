@@ -4,6 +4,7 @@ import java.util.List;
 import javax.inject.Inject;
 import pl.lodz.p.pas.dto.UserDto;
 import pl.lodz.p.pas.dto.mapper.UserDtoMapper;
+import pl.lodz.p.pas.exception.ItemNotFoundException;
 import pl.lodz.p.pas.model.user.User;
 import pl.lodz.p.pas.repository.UserRepo;
 
@@ -18,7 +19,7 @@ public class UserManager {
 
     public User getUser(long id) {
         return userRepo.findByID(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ItemNotFoundException("User not found"));
     }
 
     public List<User> getUsers() {
@@ -27,20 +28,20 @@ public class UserManager {
 
     public void activateUser(long id) {
         User user = userRepo.findByID(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ItemNotFoundException("User not found"));
         user.setActive(true);
     }
 
     public void deactivateUser(long id) {
         User user = userRepo.findByID(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ItemNotFoundException("User not found"));
         user.setActive(false);
     }
 
     public void updateUser(Long id, UserDto userDto) {
 
         User user = userRepo.findByID(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ItemNotFoundException("User not found"));
 
         List<User> users = userRepo.getItems();
         int index = users.indexOf(user);
