@@ -81,10 +81,4 @@ public class RentableItemService {
         return Response.status(Response.Status.NO_CONTENT).build();
     }
 
-    @DELETE
-    @Path("{id}")
-    public Response DeleteRentableItem(@PathParam("id") @Min(0) Long id) {
-        rentableItemManager.deleteRentableItem(id);
-        return Response.status(Response.Status.NO_CONTENT).build();
-    }
 }

@@ -75,7 +75,7 @@ public class UserService {
     }
 
     @PUT
-    @Path("admin/{id}")
+    @Path("manager/{id}")
     public Response updateManager(@PathParam("id") @Min(0) Long id, UserDto userDto) {
         try {
             userManager.updateUser(id, userDto);
@@ -86,7 +86,7 @@ public class UserService {
     }
 
     @PUT
-    @Path("admin/{id}")
+    @Path("client/{id}")
     public Response updateClient(@PathParam("id") @Min(0) Long id, ClientDto clientDto) {
         try {
             userManager.updateUser(id, clientDto);
