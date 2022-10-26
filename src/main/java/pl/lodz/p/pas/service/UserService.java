@@ -33,22 +33,22 @@ public class UserService {
 
     @POST
     @Path("/admin")
-    public Response createAdmin(Admin admin) {
-        userManager.addUser(admin);
+    public Response createAdmin(UserDto userDto) {
+        userManager.addUser(userDto);
         return Response.status(Response.Status.CREATED).build();
     }
 
     @POST
     @Path("/client")
-    public Response createClient(Client client) {
-        userManager.addUser(client);
+    public Response createClient(ClientDto clientDto) {
+        userManager.addUser(clientDto);
         return Response.status(Response.Status.CREATED).build();
     }
 
     @POST
     @Path("/manager")
-    public Response createManager(Manager manager) {
-        userManager.addUser(manager);
+    public Response createManager(UserDto userDto) {
+        userManager.addUser(userDto);
         return Response.status(Response.Status.CREATED).build();
     }
 

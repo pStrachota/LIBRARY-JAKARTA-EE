@@ -13,7 +13,8 @@ public class UserManager {
     @Inject
     UserRepo userRepo;
 
-    public long addUser(User user) {
+    public long addUser(UserDto userDto) {
+        User user = UserDtoMapper.mapToUser(userDto);
         return userRepo.add(user);
     }
 
