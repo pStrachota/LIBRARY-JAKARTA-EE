@@ -1,14 +1,27 @@
 package pl.lodz.p.pas.model.resource;
 
+import javax.persistence.Entity;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
+import lombok.Setter;
 
-@SuperBuilder
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
+@Entity
+@Getter
+@Setter
 public class Book extends RentableItem {
 
     private String publishingHouse;
+
+    @Builder
+    public Book(long id, long version, boolean isAvailable, String serialNumber,
+                String author,
+                String title, String publishingHouse) {
+        super(id, version, isAvailable, serialNumber, author, title);
+        this.publishingHouse = publishingHouse;
+    }
 
 }
