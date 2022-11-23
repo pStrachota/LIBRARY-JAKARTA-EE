@@ -59,6 +59,6 @@ public class Rent {
     @Cascade(CascadeType.MERGE)
     @JoinColumn
     @BatchSize(size = 10)
-    private List<RentableItem> rentableItem;
+    private List<RentableItem> rentableItems;
 
 }

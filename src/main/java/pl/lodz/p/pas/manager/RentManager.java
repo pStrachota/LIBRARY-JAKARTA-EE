@@ -3,36 +3,46 @@ package pl.lodz.p.pas.manager;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import javax.inject.Inject;
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
 import pl.lodz.p.pas.dto.RentDto;
 import pl.lodz.p.pas.exception.DeactivatedUserException;
+import pl.lodz.p.pas.exception.EndedRentException;
 import pl.lodz.p.pas.exception.ExceededLimitException;
 import pl.lodz.p.pas.exception.ItemNotFoundException;
+import pl.lodz.p.pas.exception.RentableItemNotAvailableException;
+import pl.lodz.p.pas.exception.WrongClientTypeException;
 import pl.lodz.p.pas.model.Rent;
 import pl.lodz.p.pas.model.resource.RentableItem;
 import pl.lodz.p.pas.model.user.Client;
+import pl.lodz.p.pas.model.user.User;
 import pl.lodz.p.pas.repository.RentRepo;
 import pl.lodz.p.pas.repository.RentableItemRepo;
 import pl.lodz.p.pas.repository.UserRepo;
 
+@Stateless
 public class RentManager {
 
-    @Inject
-    RentRepo currentRentRepo;
+    @EJB
+    RentRepo currentRentDbRepo;
 
-    @Inject
-    RentRepo archiveRentRepo;
+    @EJB
+    RentableItemRepo rentableItemDbRepo;
 
-    @Inject
-    RentableItemRepo rentableItemRepo;
-
-    @Inject
-    UserRepo userRepo;
+    @EJB
+    UserRepo userDbRepo;
 
     public void addRent(RentDto rentDto) {
 
-        Client client = (Client) userRepo.findByID(rentDto.getClientId())
-                .orElseThrow(() -> new ItemNotFoundException("Client not found"));
+        User user = userDbRepo.findByID(rentDto.getClientId())
+                .orElseThrow(() -> new ItemNotFoundException("User not found"));
+        Client client = null;
+
+        if (!(user instanceof Client)) {
+            throw new WrongClientTypeException("User is not a client");
+        } else {
+            client = (Client) user;
+        }
 
         if (!client.isActive()) {
             throw new DeactivatedUserException("Client is deactivated");
@@ -41,47 +51,64 @@ public class RentManager {
         List<RentableItem> rentableItems = new ArrayList<>();
 
         rentDto.getRentableItemIds().forEach(rentableItemId -> {
-            RentableItem rentableItem = rentableItemRepo.findByID(rentableItemId)
+            RentableItem rentableItem = rentableItemDbRepo.findByID(rentableItemId)
                     .orElseThrow(() -> new ItemNotFoundException("RentableItem not found"));
+            if (!rentableItem.isAvailable()) {
+                throw new RentableItemNotAvailableException("RentableItem is rented");
+            }
+            rentableItem.setAvailable(false);
             rentableItems.add(rentableItem);
         });
 
+
         long clientId = client.getId();
 
-        int clientRents = currentRentRepo.getItems().stream()
+        int clientRents = currentRentDbRepo.getItems().stream()
                 .filter(r -> r.getClient().getId() == clientId)
-                .mapToInt(r -> r.getRentableItem().size())
+                .mapToInt(r -> r.getRentableItems().size())
                 .sum();
 
         Rent rent = new Rent();
         rent.setClient(client);
-        rent.setRentableItem(rentableItems);
+        rent.setEnded(false);
+        rent.setRentableItems(rentableItems);
         rent.setBeginTime(LocalDateTime.now());
+        rent.setEndTime(LocalDateTime.now().plusDays(client.getClientType().getMaxDays()));
 
         if (client.getClientType().getMaxItems() > clientRents) {
-            currentRentRepo.add(rent);
+            currentRentDbRepo.add(rent);
         } else {
             throw new ExceededLimitException("Client has reached max items");
         }
 
     }
 
+
     public List<Rent> getRents() {
-        return currentRentRepo.getItems();
+        return currentRentDbRepo.getItems();
     }
 
     public Rent getRent(long id) {
-        return currentRentRepo.findByID(id)
+        return currentRentDbRepo.findByID(id)
                 .orElseThrow(() -> new ItemNotFoundException("Rent not found"));
     }
 
     public void removeRent(Long id) {
 
-        Rent rent = currentRentRepo.findByID(id)
+        Rent rent = currentRentDbRepo.findByID(id)
                 .orElseThrow(() -> new ItemNotFoundException("Rent not found"));
+
+        if (rent.isEnded()) {
+            throw new EndedRentException("Rent is already ended");
+        }
 
         Client client = rent.getClient();
         rent.setEndTime(LocalDateTime.now());
+        rent.setEnded(true);
+
+        rent.getRentableItems().forEach(rentableItem -> {
+            rentableItem.setAvailable(true);
+        });
 
         if (rent.getEndTime()
                 .isAfter(rent.getBeginTime().plusDays(client.getClientType().getMaxDays()))) {
@@ -92,37 +119,6 @@ public class RentManager {
             rent.setRentCost(client.getClientType().getPenalty() * daysAfterEndTime);
         }
 
-        currentRentRepo.remove(rent);
-        archiveRentRepo.add(rent);
-    }
-
-    public void updateRent(Long id, RentDto rentDto) {
-
-        Rent rent = currentRentRepo.findByID(id)
-                .orElseThrow(() -> new ItemNotFoundException("Rent not found"));
-
-        Client client = (Client) userRepo.findByID(rentDto.getClientId())
-                .orElseThrow(() -> new ItemNotFoundException("Client not found"));
-
-        if (!client.isActive()) {
-            throw new DeactivatedUserException("Client is not active");
-        }
-
-        List<Long> rentableItemIds = rentDto.getRentableItemIds();
-        List<RentableItem> rentableItems = new ArrayList<>();
-
-        rentableItemIds.forEach(rentableItemId -> {
-            RentableItem rentableItem = rentableItemRepo.findByID(rentableItemId)
-                    .orElseThrow(() -> new ItemNotFoundException("RentableItem not found"));
-            rentableItems.add(rentableItem);
-        });
-
-        Rent updatedRent = new Rent();
-        updatedRent.setClient(client);
-        updatedRent.setRentableItem(rentableItems);
-        updatedRent.setBeginTime(LocalDateTime.now());
-
-        int index = currentRentRepo.getItems().indexOf(rent);
-        currentRentRepo.getItems().set(index, updatedRent);
+        currentRentDbRepo.update(id, rent);
     }
 }
