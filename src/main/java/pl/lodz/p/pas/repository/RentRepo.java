@@ -1,59 +1,52 @@
 package pl.lodz.p.pas.repository;
 
-import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicLong;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import org.hibernate.Criteria;
 import pl.lodz.p.pas.model.Rent;
-import pl.lodz.p.pas.model.user.Client;
 
-@ApplicationScoped
+@Stateless
 public class RentRepo extends Repo<Rent> {
 
-    private final AtomicLong lastId = new AtomicLong(0);
-    @Inject
-    private UserRepo userRepo;
-    @Inject
-    private RentableItemRepo rentableItemRepo;
-    private List<Rent> rents;
+    @PersistenceContext
+    EntityManager entityManager;
 
-    public RentRepo() {
-        rents = Arrays.asList(
-                Rent.builder().rentId(lastId.getAndIncrement())
-                        .beginTime(LocalDateTime.now()).client((Client) userRepo.findByID(2L).get())
-                        .rentableItem(Arrays.asList(rentableItemRepo.findByID(1L).get())).build()
-        );
+    @Override
+    public void add(Rent item) {
+        entityManager.persist(item);
     }
 
     @Override
-    public synchronized long add(Rent item) {
-        item.setRentId(lastId.getAndIncrement());
-        rents.add(item);
-        return item.getRentId();
-    }
-
-    @Override
-    public synchronized void remove(Rent item) {
-        rents.remove(item);
+    public void remove(Rent item) {
+        entityManager.remove(item);
     }
 
     @Override
     public Optional<Rent> findByID(Long id) {
-        for (Rent rent : rents) {
-            if (rent.getRentId().equals(id)) {
-                return Optional.of(rent);
-            }
-        }
-        return Optional.empty();
+        Criteria criteria =
+                entityManager.unwrap(org.hibernate.Session.class).createCriteria(Rent.class);
+        criteria.add(org.hibernate.criterion.Restrictions.eq("id", id));
+        criteria.setFetchMode("rentableItems", org.hibernate.FetchMode.JOIN);
+        criteria.setFetchMode("client", org.hibernate.FetchMode.JOIN);
+        return Optional.ofNullable((Rent) criteria.uniqueResult());
+    }
+
+    @Override
+    public void update(Long id, Rent item) {
+        item.setRentId(id);
+        entityManager.merge(item);
     }
 
     @Override
     public List<Rent> getItems() {
-        return rents;
+        Criteria criteria =
+                entityManager.unwrap(org.hibernate.Session.class).createCriteria(Rent.class);
+        criteria.setFetchMode("rentableItems", org.hibernate.FetchMode.JOIN);
+        criteria.setFetchMode("client", org.hibernate.FetchMode.JOIN);
+        return criteria.list();
     }
-
 
 }

@@ -11,6 +11,8 @@ public abstract class Repo<T> {
 
     public abstract Optional<T> findByID(Long id);
 
+    public abstract void update(Long id, T item);
+
     public abstract List<T> getItems();
 
 }
