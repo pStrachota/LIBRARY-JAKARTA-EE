@@ -1,7 +1,10 @@
 package pl.lodz.p.pas.exception;
 
-public class DuplicatedLoginException extends RuntimeException {
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
+
+public class DuplicatedLoginException extends WebApplicationException {
     public DuplicatedLoginException(String message) {
-        super(message);
+        super(message, Response.Status.CONFLICT);
     }
 }
