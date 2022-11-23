@@ -1,6 +1,6 @@
 package pl.lodz.p.pas.service;
 
-import javax.inject.Inject;
+import javax.ejb.EJB;
 import javax.validation.constraints.Min;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -10,20 +10,20 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
+import pl.lodz.p.pas.dto.AdminDto;
 import pl.lodz.p.pas.dto.ClientDto;
+import pl.lodz.p.pas.dto.ManagerDto;
 import pl.lodz.p.pas.dto.UserDto;
 import pl.lodz.p.pas.manager.UserManager;
-import pl.lodz.p.pas.model.user.Admin;
-import pl.lodz.p.pas.model.user.Client;
-import pl.lodz.p.pas.model.user.Manager;
 
 @Path("/user")
 @Produces("application/json")
 @Consumes("application/json")
 public class UserService {
 
-    @Inject
+    @EJB
     UserManager userManager;
 
     @GET
@@ -45,6 +45,18 @@ public class UserService {
         return Response.status(Response.Status.CREATED).build();
     }
 
+    @GET
+    @Path("/login-search")
+    public Response findByLoginContains(@QueryParam("login") String login) {
+        return Response.ok(userManager.findByLoginContains(login)).build();
+    }
+
+    @GET
+    @Path("/name-search")
+    public Response findByNameContains(@QueryParam("name") String name) {
+        return Response.ok(userManager.findByNameContains(name)).build();
+    }
+
     @POST
     @Path("/manager")
     public Response createManager(UserDto userDto) {
@@ -55,69 +67,40 @@ public class UserService {
     @GET
     @Path("{id}")
     public Response getUserById(@PathParam("id") @Min(0) Long id) {
-
-        try {
-            return Response.ok(userManager.getUser(id)).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+        return Response.ok(userManager.getUser(id)).build();
     }
 
     @PUT
     @Path("admin/{id}")
-    public Response updateAdmin(@PathParam("id") @Min(0) Long id, UserDto userDto) {
-        try {
-            userManager.updateUser(id, userDto);
-            return Response.status(Response.Status.OK).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
+    public Response updateAdmin(@PathParam("id") @Min(0) Long id, AdminDto adminDto) {
+        userManager.updateUser(id, adminDto);
+        return Response.status(Response.Status.OK).build();
     }
 
     @PUT
     @Path("manager/{id}")
-    public Response updateManager(@PathParam("id") @Min(0) Long id, UserDto userDto) {
-        try {
-            userManager.updateUser(id, userDto);
-            return Response.status(Response.Status.OK).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
+    public Response updateManager(@PathParam("id") @Min(0) Long id, ManagerDto managerDto) {
+        userManager.updateUser(id, managerDto);
+        return Response.status(Response.Status.OK).build();
     }
 
     @PUT
     @Path("client/{id}")
     public Response updateClient(@PathParam("id") @Min(0) Long id, ClientDto clientDto) {
-        try {
-            userManager.updateUser(id, clientDto);
-            return Response.status(Response.Status.OK).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
+        userManager.updateUser(id, clientDto);
+        return Response.status(Response.Status.OK).build();
     }
 
     @PATCH
     @Path("activate/{id}")
     public Response activateUser(@PathParam("id") @Min(0) long id) {
-        try {
-            userManager.activateUser(id);
-            return Response.status(Response.Status.OK).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
+        return Response.ok(userManager.activateUser(id)).build();
     }
 
     @PATCH
     @Path("deactivate/{id}")
     public Response deactivateUser(@PathParam("id") @Min(0) long id) {
-        try {
-            userManager.deactivateUser(id);
-            return Response.status(Response.Status.OK).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
+        return Response.ok(userManager.deactivateUser(id)).build();
 
     }
-
-
 }

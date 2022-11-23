@@ -53,11 +53,12 @@ public class UserManager {
         return userDbRepo.getItems();
     }
 
-    public void activateUser(long id) {
+    public User activateUser(long id) {
         User user = userDbRepo.findByID(id)
                 .orElseThrow(() -> new ItemNotFoundException("User not found"));
         user.setActive(true);
         userDbRepo.update(id, user);
+        return user;
     }
 
     public User deactivateUser(long id) {

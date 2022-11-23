@@ -1,6 +1,6 @@
 package pl.lodz.p.pas.service;
 
-import javax.inject.Inject;
+import javax.ejb.EJB;
 import javax.validation.constraints.Min;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -10,10 +10,10 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import pl.lodz.p.pas.dto.ArticleDto;
 import pl.lodz.p.pas.dto.BookDto;
-import pl.lodz.p.pas.exception.ItemNotFoundException;
 import pl.lodz.p.pas.manager.RentableItemManager;
 
 
@@ -22,10 +22,11 @@ import pl.lodz.p.pas.manager.RentableItemManager;
 @Consumes("application/json")
 public class RentableItemService {
 
-    @Inject
+    @EJB
     RentableItemManager rentableItemManager;
 
     @GET
+    @Produces("application/json")
     public Response getAllRentableItems() {
         return Response.ok(rentableItemManager.getRentableItems()).build();
     }
@@ -33,16 +34,12 @@ public class RentableItemService {
     @GET
     @Path("{id}")
     public Response getRentableItemById(@PathParam("id") @Min(0) Long id) {
-
-        try {
-            return Response.ok(rentableItemManager.getRentableItem(id)).build();
-        } catch (ItemNotFoundException e) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+        return Response.ok(rentableItemManager.getRentableItem(id)).build();
     }
 
     @POST
     @Path("/book")
+    @Consumes("application/json")
     public Response createBookRentableItem(BookDto bookDto) {
         rentableItemManager.addRentableItem(bookDto);
         return Response.status(Response.Status.CREATED).build();
@@ -58,10 +55,14 @@ public class RentableItemService {
     @PUT
     @Path("/book/{id}")
     public Response updateBookRentableItem(@PathParam("id") @Min(0) Long id, BookDto bookDto) {
-
         rentableItemManager.updateRentableItem(id, bookDto);
         return Response.status(Response.Status.NO_CONTENT).build();
+    }
 
+    @GET
+    @Path("/title-search/{title}")
+    public Response getRentableItemsByTitle(@QueryParam("title") String title) {
+        return Response.ok(rentableItemManager.findByTitleContains(title)).build();
     }
 
     @PUT
