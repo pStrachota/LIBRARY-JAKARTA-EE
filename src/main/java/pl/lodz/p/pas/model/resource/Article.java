@@ -1,6 +1,7 @@
 package pl.lodz.p.pas.model.resource;
 
 import javax.persistence.Entity;
+import javax.validation.constraints.NotEmpty;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 public class Article extends RentableItem {
 
+    @NotEmpty
     private String parentOrganisation;
 
     @Builder

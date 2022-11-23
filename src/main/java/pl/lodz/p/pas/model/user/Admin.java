@@ -1,6 +1,7 @@
 package pl.lodz.p.pas.model.user;
 
 import javax.persistence.Entity;
+import javax.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -13,8 +14,10 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 public class Admin extends User {
 
+    @NotBlank
     private String privileges;
 
+    @NotBlank
     private String position;
 
     @Builder

@@ -1,6 +1,7 @@
 package pl.lodz.p.pas.model.resource;
 
 import javax.persistence.Entity;
+import javax.validation.constraints.NotEmpty;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -14,6 +15,7 @@ import lombok.Setter;
 @Setter
 public class Book extends RentableItem {
 
+    @NotEmpty
     private String publishingHouse;
 
     @Builder

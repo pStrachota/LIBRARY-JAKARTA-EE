@@ -15,6 +15,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 public class Manager extends User {
 
+    @NotBlank
     private String position;
 
     @Builder

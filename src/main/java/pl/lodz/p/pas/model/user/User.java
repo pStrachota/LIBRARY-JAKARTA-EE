@@ -7,6 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -22,6 +24,8 @@ import lombok.experimental.SuperBuilder;
 @Inheritance(strategy = InheritanceType.JOINED)
 public class User {
 
+    @NotNull
+    @Column(columnDefinition = "boolean default true")
     private boolean isActive = true;
 
     @Id
@@ -29,10 +33,13 @@ public class User {
     @Column(unique = true, nullable = false)
     private long id;
 
+    @NotBlank
     private String name;
 
+    @NotBlank
     private String surname;
 
+    @Column(unique = true)
     private String login;
 
     public User(boolean isActive, String name, String surname, String login) {
