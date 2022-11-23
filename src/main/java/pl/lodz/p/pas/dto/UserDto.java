@@ -1,5 +1,7 @@
 package pl.lodz.p.pas.dto;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,9 +13,12 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 public class UserDto {
 
+    @NotBlank
     private String name;
 
+    @NotBlank
     private String surname;
 
+    @NotBlank
     private String password;
 }
