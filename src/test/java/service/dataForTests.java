@@ -52,9 +52,10 @@ public class dataForTests {
             .name("Jan")
             .surname("Kowalski")
             .login("admin")
-            .privileges("taniec")
+            .privileges("database")
             .position("admin")
             .build();
+
 
     public static BookDto bookDto = BookDto.builder()
             .title("Balladyna")
