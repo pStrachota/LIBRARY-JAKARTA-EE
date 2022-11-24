@@ -11,13 +11,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
@@ -28,7 +28,6 @@ import pl.lodz.p.pas.model.user.Client;
 
 @Getter
 @Setter
-@SuperBuilder
 @NoArgsConstructor
 @EqualsAndHashCode(of = "rentId")
 @AllArgsConstructor
@@ -38,6 +37,9 @@ public class Rent {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long rentId;
+
+    @Version
+    private long version;
 
     private LocalDateTime beginTime;
 
