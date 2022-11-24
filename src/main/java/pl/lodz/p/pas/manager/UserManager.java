@@ -1,54 +1,88 @@
 package pl.lodz.p.pas.manager;
 
 import java.util.List;
-import javax.inject.Inject;
+import javax.ejb.EJB;
+import javax.ejb.EJBException;
+import javax.ejb.Stateless;
+import javax.persistence.PersistenceException;
 import pl.lodz.p.pas.dto.UserDto;
 import pl.lodz.p.pas.dto.mapper.UserDtoMapper;
+import pl.lodz.p.pas.exception.DuplicatedLoginException;
 import pl.lodz.p.pas.exception.ItemNotFoundException;
 import pl.lodz.p.pas.model.user.User;
 import pl.lodz.p.pas.repository.UserRepo;
 
+@Stateless
 public class UserManager {
 
-    @Inject
-    UserRepo userRepo;
+    @EJB
+    UserRepo userDbRepo;
 
-    public long addUser(UserDto userDto) {
+    public void addUser(UserDto userDto) {
         User user = UserDtoMapper.mapToUser(userDto);
-        return userRepo.add(user);
+        try {
+            userDbRepo.add(user);
+        } catch (PersistenceException | EJBException e) {
+            if (e.getCause().getMessage().contains("ConstraintViolationException")) {
+                throw new DuplicatedLoginException(
+                        "User with " + user.getLogin() + " login already exists");
+            }
+        }
+    }
+
+    public void removeUser(Long id) {
+        User user = userDbRepo.findByID(id)
+                .orElseThrow(() -> new ItemNotFoundException("User not found"));
+        userDbRepo.remove(user);
+    }
+
+    public List<User> findByLoginContains(String login) {
+        return userDbRepo.findByLoginContains(login);
+    }
+
+    public List<User> findByNameContains(String name) {
+        return userDbRepo.findByNameContains(name);
     }
 
     public User getUser(long id) {
-        return userRepo.findByID(id)
+        return userDbRepo.findByID(id)
                 .orElseThrow(() -> new ItemNotFoundException("User not found"));
     }
 
     public List<User> getUsers() {
-        return userRepo.getItems();
+        return userDbRepo.getItems();
     }
 
-    public void activateUser(long id) {
-        User user = userRepo.findByID(id)
+    public User activateUser(long id) {
+        User user = userDbRepo.findByID(id)
                 .orElseThrow(() -> new ItemNotFoundException("User not found"));
         user.setActive(true);
+        userDbRepo.update(id, user);
+        return user;
     }
 
-    public void deactivateUser(long id) {
-        User user = userRepo.findByID(id)
+    public User deactivateUser(long id) {
+        User user = userDbRepo.findByID(id)
                 .orElseThrow(() -> new ItemNotFoundException("User not found"));
         user.setActive(false);
+        userDbRepo.update(id, user);
+        return user;
     }
 
     public void updateUser(Long id, UserDto userDto) {
 
-        User user = userRepo.findByID(id)
+        User user = userDbRepo.findByID(id)
                 .orElseThrow(() -> new ItemNotFoundException("User not found"));
 
-        List<User> users = userRepo.getItems();
-        int index = users.indexOf(user);
-
         User updatedUser = UserDtoMapper.mapToUser(userDto);
-        userRepo.getItems().set(index, updatedUser);
 
+        try {
+            userDbRepo.update(id, updatedUser);
+        } catch (EJBException e) {
+            if (e.getCause().getMessage().contains("ConstraintViolationException")) {
+                throw new ItemNotFoundException(
+                        "User with " + user.getLogin() + " login already exists");
+            }
+        }
     }
 }

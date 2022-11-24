@@ -1,28 +1,46 @@
 package pl.lodz.p.pas.manager;
 
 import java.util.List;
-import javax.inject.Inject;
+import javax.ejb.EJB;
+import javax.ejb.EJBException;
+import javax.ejb.Stateless;
+import javax.persistence.PersistenceException;
 import pl.lodz.p.pas.dto.RentableItemDto;
 import pl.lodz.p.pas.dto.mapper.RentableItemDtoMapper;
+import pl.lodz.p.pas.exception.DuplicatedSerialNumberException;
 import pl.lodz.p.pas.exception.ItemNotFoundException;
-import pl.lodz.p.pas.exception.RentedItemException;
+import pl.lodz.p.pas.exception.RentableItemNotAvailableException;
 import pl.lodz.p.pas.model.Rent;
 import pl.lodz.p.pas.model.resource.RentableItem;
 import pl.lodz.p.pas.repository.RentRepo;
 import pl.lodz.p.pas.repository.RentableItemRepo;
 
+@Stateless
 public class RentableItemManager {
 
-    @Inject
+    @EJB
     RentableItemRepo rentableItemRepo;
 
-    @Inject
+    @EJB
     RentRepo rentRepo;
 
-    public long addRentableItem(RentableItemDto rentableItemDto) {
+    public void addRentableItem(RentableItemDto rentableItemDto) {
 
         RentableItem rentableItem = RentableItemDtoMapper.mapToRentableItem(rentableItemDto);
-        return rentableItemRepo.add(rentableItem);
+
+        try {
+            rentableItemRepo.add(rentableItem);
+        } catch (PersistenceException | EJBException e) {
+            if (e.getCause().getMessage().contains("ConstraintViolationException")) {
+                throw new DuplicatedSerialNumberException(
+                        "Rentable item with " + rentableItem.getSerialNumber() +
+                                " serial number already exists");
+            }
+        }
+    }
+
+    public List<RentableItem> findByTitleContains(String title) {
+        return rentableItemRepo.findByTitleContains(title);
     }
 
     public RentableItem getRentableItem(long id) {
@@ -35,9 +53,9 @@ public class RentableItemManager {
         List<Rent> rents = rentRepo.getItems();
 
         rents.forEach(rent -> {
-            rent.getRentableItem().forEach(rentableItem -> {
-                if (rentableItem.getId().equals(id)) {
-                    throw new RentedItemException("RentableItem is rented");
+            rent.getRentableItems().forEach(rentableItem -> {
+                if (!rentableItem.isAvailable()) {
+                    throw new RentableItemNotAvailableException("RentableItem is rented");
                 }
             });
         });
@@ -56,12 +74,15 @@ public class RentableItemManager {
     public void updateRentableItem(Long id, RentableItemDto rentableItemDto) {
         RentableItem rentableItem = rentableItemRepo.findByID(id)
                 .orElseThrow(() -> new ItemNotFoundException("RentableItem not found"));
-
-        List<RentableItem> rentableItems = rentableItemRepo.getItems();
-        int index = rentableItems.indexOf(rentableItem);
-
-        RentableItem UpdatedRentableItem = RentableItemDtoMapper.mapToRentableItem(rentableItemDto);
-        rentableItemRepo.getItems().set(index, UpdatedRentableItem);
+        try {
+            rentableItemRepo.update(id, RentableItemDtoMapper.mapToRentableItem(rentableItemDto));
+        } catch (PersistenceException | EJBException e) {
+            if (e.getCause().getMessage().contains("ConstraintViolationException")) {
+                throw new DuplicatedSerialNumberException(
+                        "Rentable item with " + rentableItem.getSerialNumber() +
+                                " serial number already exists");
+            }
+        }
 
     }
 }

@@ -1,55 +1,52 @@
 package pl.lodz.p.pas.repository;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicLong;
-import javax.enterprise.context.ApplicationScoped;
-import pl.lodz.p.pas.model.resource.Article;
-import pl.lodz.p.pas.model.resource.Book;
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import pl.lodz.p.pas.model.resource.RentableItem;
 
-@ApplicationScoped
+@Stateless
 public class RentableItemRepo extends Repo<RentableItem> {
 
-    private final AtomicLong lastId = new AtomicLong(0);
-    private List<RentableItem> rentableItems;
+    @PersistenceContext
+    EntityManager entityManager;
 
-
-    public RentableItemRepo() {
-        rentableItems = Arrays.asList(
-                Book.builder().id(lastId.getAndIncrement()).title("Book1").author("Author1")
-                        .publishingHouse("PH1").serialNumber("SN1").build(),
-                Article.builder().id(lastId.getAndIncrement()).title("Article1").author("Author1")
-                        .serialNumber("SN2").parentOrganisation("PO1").build()
-        );
+    @Override
+    public void add(RentableItem item) {
+        entityManager.persist(item);
     }
 
     @Override
-    public synchronized long add(RentableItem item) {
-        item.setId(lastId.getAndIncrement());
-        rentableItems.add(item);
-        return item.getId();
+    public void remove(RentableItem item) {
+        entityManager.remove(item);
     }
 
-    @Override
-    public synchronized void remove(RentableItem item) {
-        rentableItems.remove(item);
+    public List<RentableItem> findByTitleContains(String title) {
+        return entityManager
+                .createQuery("SELECT r FROM RentableItem r WHERE r.title LIKE :title",
+                        RentableItem.class)
+                .setParameter("title", "%" + title + "%")
+                .getResultList();
     }
 
     @Override
     public Optional<RentableItem> findByID(Long id) {
-        for (RentableItem rentableItem : rentableItems) {
-            if (rentableItem.getId().equals(id)) {
-                return Optional.of(rentableItem);
-            }
-        }
-        return Optional.empty();
+        RentableItem rentableItem = entityManager.find(RentableItem.class, id);
+        return Optional.ofNullable(rentableItem);
+    }
+
+    @Override
+    public void update(Long id, RentableItem item) {
+        item.setId(id);
+        entityManager.merge(item);
     }
 
     @Override
     public List<RentableItem> getItems() {
-        return rentableItems;
+        return entityManager.createQuery("SELECT r FROM RentableItem r", RentableItem.class)
+                .getResultList();
     }
 
 }

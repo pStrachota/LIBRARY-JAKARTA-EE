@@ -16,6 +16,7 @@ public class RentableItemDtoMapper {
             return Book.builder()
                     .serialNumber(rentableItemDto.getSerialNumber())
                     .author(rentableItemDto.getAuthor())
+                    .isAvailable(true)
                     .title(rentableItemDto.getTitle())
                     .publishingHouse(bookDto.getPublishingHouse())
                     .build();
@@ -24,6 +25,7 @@ public class RentableItemDtoMapper {
             return Article.builder()
                     .serialNumber(rentableItemDto.getSerialNumber())
                     .author(rentableItemDto.getAuthor())
+                    .isAvailable(true)
                     .title(rentableItemDto.getTitle())
                     .parentOrganisation(articleDto.getParentOrganisation())
                     .build();
