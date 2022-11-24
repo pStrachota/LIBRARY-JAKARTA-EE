@@ -5,7 +5,7 @@ import java.util.Optional;
 
 public abstract class Repo<T> {
 
-    public abstract long add(T item);
+    public abstract void add(T item);
 
     public abstract void remove(T item);
 

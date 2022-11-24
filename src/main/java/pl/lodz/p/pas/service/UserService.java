@@ -1,8 +1,10 @@
 package pl.lodz.p.pas.service;
 
 import javax.ejb.EJB;
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.PATCH;
 import javax.ws.rs.POST;
@@ -15,7 +17,6 @@ import javax.ws.rs.core.Response;
 import pl.lodz.p.pas.dto.AdminDto;
 import pl.lodz.p.pas.dto.ClientDto;
 import pl.lodz.p.pas.dto.ManagerDto;
-import pl.lodz.p.pas.dto.UserDto;
 import pl.lodz.p.pas.manager.UserManager;
 
 @Path("/user")
@@ -33,14 +34,14 @@ public class UserService {
 
     @POST
     @Path("/admin")
-    public Response createAdmin(UserDto userDto) {
+    public Response createAdmin(@Valid AdminDto userDto) {
         userManager.addUser(userDto);
         return Response.status(Response.Status.CREATED).build();
     }
 
     @POST
     @Path("/client")
-    public Response createClient(ClientDto clientDto) {
+    public Response createClient(@Valid ClientDto clientDto) {
         userManager.addUser(clientDto);
         return Response.status(Response.Status.CREATED).build();
     }
@@ -59,7 +60,7 @@ public class UserService {
 
     @POST
     @Path("/manager")
-    public Response createManager(UserDto userDto) {
+    public Response createManager(@Valid ManagerDto userDto) {
         userManager.addUser(userDto);
         return Response.status(Response.Status.CREATED).build();
     }
@@ -72,21 +73,21 @@ public class UserService {
 
     @PUT
     @Path("admin/{id}")
-    public Response updateAdmin(@PathParam("id") @Min(0) Long id, AdminDto adminDto) {
+    public Response updateAdmin(@PathParam("id") @Min(0) Long id, @Valid AdminDto adminDto) {
         userManager.updateUser(id, adminDto);
         return Response.status(Response.Status.OK).build();
     }
 
     @PUT
     @Path("manager/{id}")
-    public Response updateManager(@PathParam("id") @Min(0) Long id, ManagerDto managerDto) {
+    public Response updateManager(@PathParam("id") @Min(0) Long id, @Valid ManagerDto managerDto) {
         userManager.updateUser(id, managerDto);
         return Response.status(Response.Status.OK).build();
     }
 
     @PUT
     @Path("client/{id}")
-    public Response updateClient(@PathParam("id") @Min(0) Long id, ClientDto clientDto) {
+    public Response updateClient(@PathParam("id") @Min(0) Long id, @Valid ClientDto clientDto) {
         userManager.updateUser(id, clientDto);
         return Response.status(Response.Status.OK).build();
     }
@@ -101,6 +102,13 @@ public class UserService {
     @Path("deactivate/{id}")
     public Response deactivateUser(@PathParam("id") @Min(0) long id) {
         return Response.ok(userManager.deactivateUser(id)).build();
+    }
+
+    @DELETE
+    @Path("{id}")
+    public Response deleteUser(@PathParam("id") @Min(0) long id) {
+        userManager.removeUser(id);
+        return Response.status(Response.Status.OK).build();
 
     }
 }

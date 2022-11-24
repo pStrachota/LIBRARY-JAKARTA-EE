@@ -1,19 +1,10 @@
 package pl.lodz.p.pas.repository;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicLong;
 import javax.ejb.Stateless;
-import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import pl.lodz.p.pas.exception.DuplicatedLoginException;
-import pl.lodz.p.pas.model.user.Address;
-import pl.lodz.p.pas.model.user.Admin;
-import pl.lodz.p.pas.model.user.Client;
-import pl.lodz.p.pas.model.user.ClientType;
-import pl.lodz.p.pas.model.user.Manager;
 import pl.lodz.p.pas.model.user.User;
 
 @Stateless

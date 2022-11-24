@@ -1,6 +1,7 @@
 package pl.lodz.p.pas.service;
 
 import javax.ejb.EJB;
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -40,21 +41,22 @@ public class RentableItemService {
     @POST
     @Path("/book")
     @Consumes("application/json")
-    public Response createBookRentableItem(BookDto bookDto) {
+    public Response createBookRentableItem(@Valid BookDto bookDto) {
         rentableItemManager.addRentableItem(bookDto);
         return Response.status(Response.Status.CREATED).build();
     }
 
     @POST
     @Path("/article")
-    public Response createArticleRentableItem(ArticleDto articleDto) {
+    public Response createArticleRentableItem(@Valid ArticleDto articleDto) {
         rentableItemManager.addRentableItem(articleDto);
         return Response.status(Response.Status.CREATED).build();
     }
 
     @PUT
     @Path("/book/{id}")
-    public Response updateBookRentableItem(@PathParam("id") @Min(0) Long id, BookDto bookDto) {
+    public Response updateBookRentableItem(@PathParam("id") @Min(0) Long id,
+                                           @Valid BookDto bookDto) {
         rentableItemManager.updateRentableItem(id, bookDto);
         return Response.status(Response.Status.NO_CONTENT).build();
     }
@@ -68,7 +70,7 @@ public class RentableItemService {
     @PUT
     @Path("/article/{id}")
     public Response updateArticleRentableItem(@PathParam("id") @Min(0) Long id,
-                                              ArticleDto articleDto) {
+                                              @Valid ArticleDto articleDto) {
 
         rentableItemManager.updateRentableItem(id, articleDto);
         return Response.status(Response.Status.NO_CONTENT).build();

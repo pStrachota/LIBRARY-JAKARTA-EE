@@ -1,6 +1,7 @@
 package pl.lodz.p.pas.service;
 
 import javax.ejb.EJB;
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -33,13 +34,13 @@ public class RentService {
     }
 
     @POST
-    public Response createRent(RentDto rentDto) {
+    public Response createRent(@Valid RentDto rentDto) {
         rentManager.addRent(rentDto);
         return Response.status(Response.Status.CREATED).build();
     }
 
     @DELETE
-    @Path("end/{id}")
+    @Path("{id}")
     public Response endRent(@PathParam("id") @Min(0) Long id) {
         rentManager.removeRent(id);
         return Response.ok().build();
