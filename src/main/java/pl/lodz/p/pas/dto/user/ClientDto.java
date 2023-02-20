@@ -18,9 +18,9 @@ public class ClientDto extends UserDto {
     private ClientType clientType;
 
     @Builder
-    public ClientDto(String name, String surname, String login,
+    public ClientDto(String name, String surname, String login, String password,
                      Address address, ClientType clientType) {
-        super(name, surname, login);
+        super(name, surname, login, password);
         this.address = address;
         this.clientType = clientType;
     }

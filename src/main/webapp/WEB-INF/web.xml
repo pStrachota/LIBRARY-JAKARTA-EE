@@ -9,7 +9,7 @@
     <data-source>
         <name>java:app/rocky/myCon</name>
         <class-name>com.mysql.cj.jdbc.MysqlConnectionPoolDataSource</class-name>
-        <url>jdbc:mysql://localhost:49157/nbd?allowPublicKeyRetrieval=true&amp;useSSL=false&amp;createDatabaseIfNotExist=true</url>
+        <url>jdbc:mysql://localhost:3306/nbd?allowPublicKeyRetrieval=true&amp;useSSL=false&amp;createDatabaseIfNotExist=true</url>
         <user>root</user>
         <password>root</password>
     </data-source>
