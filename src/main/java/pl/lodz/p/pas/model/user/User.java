@@ -1,5 +1,6 @@
 package pl.lodz.p.pas.model.user;
 
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -39,11 +40,19 @@ public class User extends AbstractEntity {
     @Column(unique = true)
     private String login;
 
-    public User(boolean isActive, String name, String surname, String login) {
+    @NotBlank
+    @JsonbTransient
+    private String password;
+
+    private String role;
+
+    public User(boolean isActive, String name, String surname, String login, String password, String role) {
         this.isActive = isActive;
         this.name = name;
         this.surname = surname;
         this.login = login;
+        this.password = password;
+        this.role = role;
     }
 
 }

@@ -18,8 +18,11 @@ public class UserManager {
     @Inject
     UserRepo userDbRepo;
 
+    @Inject
+    UserDtoMapper mapper;
+
     public void addUser(UserDto userDto) {
-        User user = UserDtoMapper.mapToUser(userDto);
+        User user = mapper.mapToUser(userDto);
         try {
             userDbRepo.add(user);
         } catch (PersistenceException | EJBException e) {
@@ -74,7 +77,7 @@ public class UserManager {
         User user = userDbRepo.findByID(id)
                 .orElseThrow(() -> new ItemNotFoundException("User not found"));
 
-        User updatedUser = UserDtoMapper.mapToUser(userDto);
+        User updatedUser = mapper.mapToUser(userDto);
 
         try {
             userDbRepo.update(id, updatedUser);

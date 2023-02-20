@@ -21,8 +21,8 @@ public class Manager extends User {
 
     @Builder
     public Manager(boolean isActive, String name, String surname,
-                   String login, String privileges, String position) {
-        super(isActive, name, surname, login);
+                   String login, String password, String privileges, String position) {
+        super(isActive, name, surname, login, password, "manager");
         this.position = position;
     }
 

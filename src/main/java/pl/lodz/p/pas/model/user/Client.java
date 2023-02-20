@@ -25,8 +25,8 @@ public class Client extends User {
 
     @Builder
     public Client(boolean isActive, String name, String surname,
-                  String login, Address address, ClientType clientType) {
-        super(isActive, name, surname, login);
+                  String login, String password, Address address, ClientType clientType) {
+        super(isActive, name, surname, login, password, "client");
         this.address = address;
         this.clientType = clientType;
     }
