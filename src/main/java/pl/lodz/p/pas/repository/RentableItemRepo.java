@@ -39,7 +39,7 @@ public class RentableItemRepo extends Repo<RentableItem> {
 
     @Override
     public void update(Long id, RentableItem item) {
-        item.setId(id);
+        item.setRentableItemId(id);
         entityManager.merge(item);
     }
 

@@ -50,7 +50,7 @@ public class UserRepo extends Repo<User> {
 
     @Override
     public void update(Long id, User item) {
-        item.setId(id);
+        item.setUserId(id);
         entityManager.merge(item);
     }
 

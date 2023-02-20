@@ -14,25 +14,21 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import pl.lodz.p.pas.model.AbstractEntity;
 
+@Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-@EqualsAndHashCode(of = "id")
-public class RentableItem {
+public class RentableItem extends AbstractEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long rentableItemId;
 
-    @Version
-    private long version;
-
-    @Column(columnDefinition = "boolean default true")
-    private boolean isAvailable;
+    private boolean isAvailable = true;
 
     @Column(unique = true)
     private String serialNumber;

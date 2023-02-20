@@ -3,15 +3,17 @@ package pl.lodz.p.pas.model.user;
 
 import javax.persistence.Entity;
 import javax.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
-@EqualsAndHashCode(callSuper = true)
 @Entity
+@Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Manager extends User {
 
     @NotBlank

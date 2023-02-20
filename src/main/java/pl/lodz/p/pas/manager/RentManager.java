@@ -61,10 +61,10 @@ public class RentManager {
         });
 
 
-        long clientId = client.getId();
+        long clientId = client.getUserId();
 
         int clientRents = currentRentDbRepo.getItems().stream()
-                .filter(r -> r.getClient().getId() == clientId)
+                .filter(r -> r.getClient().getUserId() == clientId)
                 .mapToInt(r -> r.getRentableItems().size())
                 .sum();
 
