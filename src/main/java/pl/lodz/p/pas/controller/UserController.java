@@ -19,6 +19,7 @@ import javax.ws.rs.core.Response;
 import pl.lodz.p.pas.dto.user.AdminDto;
 import pl.lodz.p.pas.dto.user.ClientDto;
 import pl.lodz.p.pas.dto.user.ManagerDto;
+import pl.lodz.p.pas.dto.user.PasswordDto;
 import pl.lodz.p.pas.manager.UserManager;
 
 @Path("/user")
@@ -55,6 +56,18 @@ public class UserController {
     @RolesAllowed({"admin", "manager"})
     public Response findByLoginContains(@QueryParam("login") String login) {
         return Response.ok(userManager.findByLoginContains(login)).build();
+    }
+
+    @PUT
+    @Path("password/{id}")
+    @RolesAllowed({"admin", "manager", "client"})
+    public Response changePassword(@PathParam("id") @Min(0) Long id,
+                                   @Valid PasswordDto passwordDto) {
+        if (userManager.changePassword(id, passwordDto)) {
+            return Response.status(Response.Status.OK).build();
+        }
+
+        return Response.status(Response.Status.UNAUTHORIZED).build();
     }
 
     @GET

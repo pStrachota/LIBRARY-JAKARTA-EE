@@ -6,6 +6,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.PersistenceException;
 import pl.lodz.p.pas.dto.mapper.UserDtoMapper;
+import pl.lodz.p.pas.dto.user.PasswordDto;
 import pl.lodz.p.pas.dto.user.UserDto;
 import pl.lodz.p.pas.exception.DuplicatedLoginException;
 import pl.lodz.p.pas.exception.ItemNotFoundException;
@@ -87,5 +88,18 @@ public class UserManager {
                         "User with " + user.getLogin() + " login already exists");
             }
         }
+    }
+
+    public boolean changePassword(Long id, PasswordDto passwordDto) {
+        User user = userDbRepo.findByID(id)
+                .orElseThrow(() -> new ItemNotFoundException("User not found"));
+
+        if (!mapper.comparePasswords(passwordDto.getOldPassword(), user.getPassword())) {
+            return false;
+        }
+
+        String hash = mapper.passwordHash(passwordDto.getNewPassword());
+        userDbRepo.changePassword(id, hash);
+        return true;
     }
 }

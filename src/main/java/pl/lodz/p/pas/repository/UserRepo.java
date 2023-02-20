@@ -56,4 +56,10 @@ public class UserRepo extends Repo<User> {
         entityManager.merge(item);
     }
 
+    public void changePassword(Long id, String hash) {
+        User user = entityManager.find(User.class, id);
+        user.setPassword(hash);
+        entityManager.merge(user);
+    }
+
 }
