@@ -1,12 +1,12 @@
 package pl.lodz.p.pas.manager;
 
 import java.util.List;
-import javax.ejb.EJB;
 import javax.ejb.EJBException;
-import javax.ejb.Stateless;
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import javax.persistence.PersistenceException;
-import pl.lodz.p.pas.dto.resource.RentableItemDto;
 import pl.lodz.p.pas.dto.mapper.RentableItemDtoMapper;
+import pl.lodz.p.pas.dto.resource.RentableItemDto;
 import pl.lodz.p.pas.exception.DuplicatedSerialNumberException;
 import pl.lodz.p.pas.exception.ItemNotFoundException;
 import pl.lodz.p.pas.exception.RentableItemNotAvailableException;
@@ -15,13 +15,13 @@ import pl.lodz.p.pas.model.resource.RentableItem;
 import pl.lodz.p.pas.repository.RentRepo;
 import pl.lodz.p.pas.repository.RentableItemRepo;
 
-@Stateless
+@RequestScoped
 public class RentableItemManager {
 
-    @EJB
+    @Inject
     RentableItemRepo rentableItemRepo;
 
-    @EJB
+    @Inject
     RentRepo rentRepo;
 
     public void addRentableItem(RentableItemDto rentableItemDto) {

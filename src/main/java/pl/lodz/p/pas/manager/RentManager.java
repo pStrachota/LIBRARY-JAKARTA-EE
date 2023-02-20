@@ -3,8 +3,8 @@ package pl.lodz.p.pas.manager;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import pl.lodz.p.pas.dto.RentDto;
 import pl.lodz.p.pas.exception.DeactivatedUserException;
 import pl.lodz.p.pas.exception.EndedRentException;
@@ -20,16 +20,16 @@ import pl.lodz.p.pas.repository.RentRepo;
 import pl.lodz.p.pas.repository.RentableItemRepo;
 import pl.lodz.p.pas.repository.UserRepo;
 
-@Stateless
+@RequestScoped
 public class RentManager {
 
-    @EJB
+    @Inject
     RentRepo currentRentDbRepo;
 
-    @EJB
+    @Inject
     RentableItemRepo rentableItemDbRepo;
 
-    @EJB
+    @Inject
     UserRepo userDbRepo;
 
     public void addRent(RentDto rentDto) {

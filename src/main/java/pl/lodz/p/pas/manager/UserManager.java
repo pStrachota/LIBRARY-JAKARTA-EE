@@ -1,21 +1,21 @@
 package pl.lodz.p.pas.manager;
 
 import java.util.List;
-import javax.ejb.EJB;
 import javax.ejb.EJBException;
-import javax.ejb.Stateless;
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import javax.persistence.PersistenceException;
-import pl.lodz.p.pas.dto.user.UserDto;
 import pl.lodz.p.pas.dto.mapper.UserDtoMapper;
+import pl.lodz.p.pas.dto.user.UserDto;
 import pl.lodz.p.pas.exception.DuplicatedLoginException;
 import pl.lodz.p.pas.exception.ItemNotFoundException;
 import pl.lodz.p.pas.model.user.User;
 import pl.lodz.p.pas.repository.UserRepo;
 
-@Stateless
+@RequestScoped
 public class UserManager {
 
-    @EJB
+    @Inject
     UserRepo userDbRepo;
 
     public void addUser(UserDto userDto) {

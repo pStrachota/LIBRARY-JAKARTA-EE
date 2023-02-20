@@ -2,13 +2,15 @@ package pl.lodz.p.pas.repository;
 
 import java.util.List;
 import java.util.Optional;
-import javax.ejb.Stateless;
+import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 import org.hibernate.Criteria;
 import pl.lodz.p.pas.model.Rent;
 
-@Stateless
+@ApplicationScoped
+@Transactional
 public class RentRepo extends Repo<Rent> {
 
     @PersistenceContext

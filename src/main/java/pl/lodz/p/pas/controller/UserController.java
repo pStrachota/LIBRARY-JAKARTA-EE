@@ -1,6 +1,7 @@
 package pl.lodz.p.pas.controller;
 
-import javax.ejb.EJB;
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.ws.rs.Consumes;
@@ -22,9 +23,10 @@ import pl.lodz.p.pas.manager.UserManager;
 @Path("/user")
 @Produces("application/json")
 @Consumes("application/json")
+@RequestScoped
 public class UserController {
 
-    @EJB
+    @Inject
     UserManager userManager;
 
     @GET

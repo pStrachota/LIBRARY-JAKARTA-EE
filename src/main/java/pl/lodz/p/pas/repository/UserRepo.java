@@ -2,12 +2,14 @@ package pl.lodz.p.pas.repository;
 
 import java.util.List;
 import java.util.Optional;
-import javax.ejb.Stateless;
+import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 import pl.lodz.p.pas.model.user.User;
 
-@Stateless
+@ApplicationScoped
+@Transactional
 public class UserRepo extends Repo<User> {
 
     @PersistenceContext
