@@ -5,7 +5,7 @@ import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
 import javax.persistence.PersistenceException;
-import pl.lodz.p.pas.dto.RentableItemDto;
+import pl.lodz.p.pas.dto.resource.RentableItemDto;
 import pl.lodz.p.pas.dto.mapper.RentableItemDtoMapper;
 import pl.lodz.p.pas.exception.DuplicatedSerialNumberException;
 import pl.lodz.p.pas.exception.ItemNotFoundException;

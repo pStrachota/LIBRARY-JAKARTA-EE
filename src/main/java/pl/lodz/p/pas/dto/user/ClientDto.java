@@ -1,10 +1,9 @@
-package pl.lodz.p.pas.dto;
+package pl.lodz.p.pas.dto.user;
 
 import javax.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 import pl.lodz.p.pas.model.user.Address;
 import pl.lodz.p.pas.model.user.ClientType;
 

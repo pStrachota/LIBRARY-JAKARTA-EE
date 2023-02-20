@@ -34,7 +34,7 @@ public class Rent extends AbstractEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long rentId;
+    private Long rentId;
 
     @NotNull
     private LocalDateTime beginTime;

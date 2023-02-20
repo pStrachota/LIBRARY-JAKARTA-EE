@@ -18,7 +18,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Stateless
-class UserServiceTest {
+class UserControllerTest {
 
     @Test
     @Order(1)

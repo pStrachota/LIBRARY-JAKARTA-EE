@@ -1,22 +1,21 @@
-package pl.lodz.p.pas.dto;
+package pl.lodz.p.pas.dto.user;
 
 import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RentableItemDto {
+public class UserDto {
 
     @NotBlank
-    private String serialNumber;
+    private String name;
 
     @NotBlank
-    private String author;
+    private String surname;
 
     @NotBlank
-    private String title;
+    private String login;
 }

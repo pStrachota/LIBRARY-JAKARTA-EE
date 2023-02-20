@@ -1,4 +1,4 @@
-package pl.lodz.p.pas.service;
+package pl.lodz.p.pas.controller;
 
 import javax.ejb.EJB;
 import javax.validation.Valid;
@@ -14,15 +14,15 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
-import pl.lodz.p.pas.dto.AdminDto;
-import pl.lodz.p.pas.dto.ClientDto;
-import pl.lodz.p.pas.dto.ManagerDto;
+import pl.lodz.p.pas.dto.user.AdminDto;
+import pl.lodz.p.pas.dto.user.ClientDto;
+import pl.lodz.p.pas.dto.user.ManagerDto;
 import pl.lodz.p.pas.manager.UserManager;
 
 @Path("/user")
 @Produces("application/json")
 @Consumes("application/json")
-public class UserService {
+public class UserController {
 
     @EJB
     UserManager userManager;

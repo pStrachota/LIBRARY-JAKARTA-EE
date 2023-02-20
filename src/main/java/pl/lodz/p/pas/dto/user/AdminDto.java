@@ -1,4 +1,4 @@
-package pl.lodz.p.pas.dto;
+package pl.lodz.p.pas.dto.user;
 
 import javax.validation.constraints.NotEmpty;
 import lombok.Builder;
@@ -7,13 +7,19 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class ManagerDto extends UserDto {
+public class AdminDto extends UserDto {
+
 
     @Builder
-    public ManagerDto(String name, String surname, String login, String position) {
+    public AdminDto(String name, String surname, String login, String privileges,
+                    String position) {
         super(name, surname, login);
+        this.privileges = privileges;
         this.position = position;
     }
+
+    @NotEmpty
+    private String privileges;
 
     @NotEmpty
     private String position;

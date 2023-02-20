@@ -17,7 +17,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import pl.lodz.p.pas.model.resource.Book;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class RentableItemServiceTest {
+class RentableItemControllerTest {
 
 
     @Test

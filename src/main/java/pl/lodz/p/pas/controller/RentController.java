@@ -1,4 +1,4 @@
-package pl.lodz.p.pas.service;
+package pl.lodz.p.pas.controller;
 
 import javax.ejb.EJB;
 import javax.validation.Valid;
@@ -17,7 +17,7 @@ import pl.lodz.p.pas.manager.RentManager;
 @Path("/rent")
 @Produces("application/json")
 @Consumes("application/json")
-public class RentService {
+public class RentController {
 
     @EJB
     RentManager rentManager;

@@ -1,9 +1,9 @@
 package pl.lodz.p.pas.dto.mapper;
 
-import pl.lodz.p.pas.dto.AdminDto;
-import pl.lodz.p.pas.dto.ClientDto;
-import pl.lodz.p.pas.dto.ManagerDto;
-import pl.lodz.p.pas.dto.UserDto;
+import pl.lodz.p.pas.dto.user.AdminDto;
+import pl.lodz.p.pas.dto.user.ClientDto;
+import pl.lodz.p.pas.dto.user.ManagerDto;
+import pl.lodz.p.pas.dto.user.UserDto;
 import pl.lodz.p.pas.model.user.Admin;
 import pl.lodz.p.pas.model.user.Client;
 import pl.lodz.p.pas.model.user.Manager;

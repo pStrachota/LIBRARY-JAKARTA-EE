@@ -1,4 +1,4 @@
-package pl.lodz.p.pas.service;
+package pl.lodz.p.pas.controller;
 
 import javax.ejb.EJB;
 import javax.validation.Valid;
@@ -13,15 +13,15 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
-import pl.lodz.p.pas.dto.ArticleDto;
-import pl.lodz.p.pas.dto.BookDto;
+import pl.lodz.p.pas.dto.resource.ArticleDto;
+import pl.lodz.p.pas.dto.resource.BookDto;
 import pl.lodz.p.pas.manager.RentableItemManager;
 
 
 @Path("/rentable-item")
 @Produces("application/json")
 @Consumes("application/json")
-public class RentableItemService {
+public class RentableItemController {
 
     @EJB
     RentableItemManager rentableItemManager;
