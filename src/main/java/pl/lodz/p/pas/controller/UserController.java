@@ -1,5 +1,6 @@
 package pl.lodz.p.pas.controller;
 
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -24,6 +25,7 @@ import pl.lodz.p.pas.manager.UserManager;
 @Produces("application/json")
 @Consumes("application/json")
 @RequestScoped
+@RolesAllowed("admin")
 public class UserController {
 
     @Inject
@@ -50,12 +52,14 @@ public class UserController {
 
     @GET
     @Path("/login-search")
+    @RolesAllowed({"admin", "manager"})
     public Response findByLoginContains(@QueryParam("login") String login) {
         return Response.ok(userManager.findByLoginContains(login)).build();
     }
 
     @GET
     @Path("/name-search")
+    @RolesAllowed({"admin", "manager"})
     public Response findByNameContains(@QueryParam("name") String name) {
         return Response.ok(userManager.findByNameContains(name)).build();
     }

@@ -1,5 +1,6 @@
 package pl.lodz.p.pas.controller;
 
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -19,6 +20,7 @@ import pl.lodz.p.pas.manager.RentManager;
 @Produces("application/json")
 @Consumes("application/json")
 @RequestScoped
+@RolesAllowed({"admin", "manager"})
 public class RentController {
 
     @Inject
@@ -36,6 +38,7 @@ public class RentController {
     }
 
     @POST
+    @RolesAllowed({"admin", "manager", "client"})
     public Response createRent(@Valid RentDto rentDto) {
         rentManager.addRent(rentDto);
         return Response.status(Response.Status.CREATED).build();

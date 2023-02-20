@@ -1,5 +1,6 @@
 package pl.lodz.p.pas.controller;
 
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -23,6 +24,7 @@ import pl.lodz.p.pas.manager.RentableItemManager;
 @Produces("application/json")
 @Consumes("application/json")
 @RequestScoped
+@RolesAllowed({"admin", "manager"})
 public class RentableItemController {
 
     @Inject
@@ -30,6 +32,7 @@ public class RentableItemController {
 
     @GET
     @Produces("application/json")
+    @RolesAllowed({"admin", "manager", "client"})
     public Response getAllRentableItems() {
         return Response.ok(rentableItemManager.getRentableItems()).build();
     }
