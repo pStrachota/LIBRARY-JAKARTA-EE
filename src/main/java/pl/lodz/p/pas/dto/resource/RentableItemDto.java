@@ -1,4 +1,4 @@
-package pl.lodz.p.pas.dto;
+package pl.lodz.p.pas.dto.resource;
 
 import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

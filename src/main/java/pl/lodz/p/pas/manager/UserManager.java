@@ -1,25 +1,29 @@
 package pl.lodz.p.pas.manager;
 
 import java.util.List;
-import javax.ejb.EJB;
 import javax.ejb.EJBException;
-import javax.ejb.Stateless;
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import javax.persistence.PersistenceException;
-import pl.lodz.p.pas.dto.UserDto;
 import pl.lodz.p.pas.dto.mapper.UserDtoMapper;
+import pl.lodz.p.pas.dto.user.PasswordDto;
+import pl.lodz.p.pas.dto.user.UserDto;
 import pl.lodz.p.pas.exception.DuplicatedLoginException;
 import pl.lodz.p.pas.exception.ItemNotFoundException;
 import pl.lodz.p.pas.model.user.User;
 import pl.lodz.p.pas.repository.UserRepo;
 
-@Stateless
+@RequestScoped
 public class UserManager {
 
-    @EJB
+    @Inject
     UserRepo userDbRepo;
 
+    @Inject
+    UserDtoMapper mapper;
+
     public void addUser(UserDto userDto) {
-        User user = UserDtoMapper.mapToUser(userDto);
+        User user = mapper.mapToUser(userDto);
         try {
             userDbRepo.add(user);
         } catch (PersistenceException | EJBException e) {
@@ -74,7 +78,7 @@ public class UserManager {
         User user = userDbRepo.findByID(id)
                 .orElseThrow(() -> new ItemNotFoundException("User not found"));
 
-        User updatedUser = UserDtoMapper.mapToUser(userDto);
+        User updatedUser = mapper.mapToUser(userDto);
 
         try {
             userDbRepo.update(id, updatedUser);
@@ -84,5 +88,22 @@ public class UserManager {
                         "User with " + user.getLogin() + " login already exists");
             }
         }
+    }
+
+    public boolean changePassword(Long id, PasswordDto passwordDto) {
+        User user = userDbRepo.findByID(id)
+                .orElseThrow(() -> new ItemNotFoundException("User not found"));
+
+        if (!mapper.comparePasswords(passwordDto.getOldPassword(), user.getPassword())) {
+            return false;
+        }
+
+        String hash = mapper.passwordHash(passwordDto.getNewPassword());
+        userDbRepo.changePassword(id, hash);
+        return true;
+    }
+
+    public boolean checkIfLoginExist(String login) {
+        return userDbRepo.findByLogin(login).isPresent();
     }
 }

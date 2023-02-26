@@ -2,12 +2,14 @@ package pl.lodz.p.pas.repository;
 
 import java.util.List;
 import java.util.Optional;
-import javax.ejb.Stateless;
+import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 import pl.lodz.p.pas.model.resource.RentableItem;
 
-@Stateless
+@ApplicationScoped
+@Transactional
 public class RentableItemRepo extends Repo<RentableItem> {
 
     @PersistenceContext
@@ -39,7 +41,7 @@ public class RentableItemRepo extends Repo<RentableItem> {
 
     @Override
     public void update(Long id, RentableItem item) {
-        item.setId(id);
+        item.setRentableItemId(id);
         entityManager.merge(item);
     }
 

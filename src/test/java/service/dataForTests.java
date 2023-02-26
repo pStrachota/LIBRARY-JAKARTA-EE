@@ -1,11 +1,11 @@
 package service;
 
 import java.util.Arrays;
-import pl.lodz.p.pas.dto.AdminDto;
-import pl.lodz.p.pas.dto.BookDto;
-import pl.lodz.p.pas.dto.ClientDto;
+import pl.lodz.p.pas.dto.user.AdminDto;
+import pl.lodz.p.pas.dto.resource.BookDto;
+import pl.lodz.p.pas.dto.user.ClientDto;
 import pl.lodz.p.pas.dto.RentDto;
-import pl.lodz.p.pas.dto.UserDto;
+import pl.lodz.p.pas.dto.user.UserDto;
 import pl.lodz.p.pas.model.user.Address;
 import pl.lodz.p.pas.model.user.ClientType;
 

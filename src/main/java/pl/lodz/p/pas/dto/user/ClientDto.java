@@ -1,10 +1,9 @@
-package pl.lodz.p.pas.dto;
+package pl.lodz.p.pas.dto.user;
 
 import javax.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 import pl.lodz.p.pas.model.user.Address;
 import pl.lodz.p.pas.model.user.ClientType;
 
@@ -19,9 +18,9 @@ public class ClientDto extends UserDto {
     private ClientType clientType;
 
     @Builder
-    public ClientDto(String name, String surname, String login,
+    public ClientDto(String name, String surname, String login, String password,
                      Address address, ClientType clientType) {
-        super(name, surname, login);
+        super(name, surname, login, password);
         this.address = address;
         this.clientType = clientType;
     }

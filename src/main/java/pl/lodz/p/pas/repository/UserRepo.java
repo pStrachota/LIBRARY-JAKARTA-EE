@@ -2,12 +2,14 @@ package pl.lodz.p.pas.repository;
 
 import java.util.List;
 import java.util.Optional;
-import javax.ejb.Stateless;
+import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 import pl.lodz.p.pas.model.user.User;
 
-@Stateless
+@ApplicationScoped
+@Transactional
 public class UserRepo extends Repo<User> {
 
     @PersistenceContext
@@ -50,8 +52,21 @@ public class UserRepo extends Repo<User> {
 
     @Override
     public void update(Long id, User item) {
-        item.setId(id);
+        item.setUserId(id);
         entityManager.merge(item);
     }
 
+    public void changePassword(Long id, String hash) {
+        User user = entityManager.find(User.class, id);
+        user.setPassword(hash);
+        entityManager.merge(user);
+    }
+
+    public Optional<User> findByLogin(String login) {
+        return entityManager
+                .createQuery("SELECT u FROM User u WHERE u.login = :login", User.class)
+                .setParameter("login", login)
+                .getResultStream()
+                .findFirst();
+    }
 }

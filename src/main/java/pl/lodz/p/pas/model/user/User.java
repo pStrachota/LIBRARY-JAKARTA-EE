@@ -1,5 +1,6 @@
 package pl.lodz.p.pas.model.user;
 
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,32 +8,28 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.Version;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import pl.lodz.p.pas.model.AbstractEntity;
 
-@Data
-@NoArgsConstructor
-//@AllArgsConstructor
-@EqualsAndHashCode(of = "id")
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
-public class User {
+public class User extends AbstractEntity {
 
     @NotNull
-    @Column(columnDefinition = "boolean default true")
     private boolean isActive = true;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(unique = true, nullable = false)
-    private long id;
-
-    @Version
-    private long version;
+    private Long userId;
 
     @NotBlank
     private String name;
@@ -43,11 +40,19 @@ public class User {
     @Column(unique = true)
     private String login;
 
-    public User(boolean isActive, String name, String surname, String login) {
+    @NotBlank
+    @JsonbTransient
+    private String password;
+
+    private String role;
+
+    public User(boolean isActive, String name, String surname, String login, String password, String role) {
         this.isActive = isActive;
         this.name = name;
         this.surname = surname;
         this.login = login;
+        this.password = password;
+        this.role = role;
     }
 
 }

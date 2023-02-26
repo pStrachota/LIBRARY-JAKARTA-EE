@@ -1,6 +1,8 @@
-package pl.lodz.p.pas.service;
+package pl.lodz.p.pas.controller;
 
-import javax.ejb.EJB;
+import javax.annotation.security.RolesAllowed;
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.ws.rs.Consumes;
@@ -14,17 +16,20 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
-import pl.lodz.p.pas.dto.AdminDto;
-import pl.lodz.p.pas.dto.ClientDto;
-import pl.lodz.p.pas.dto.ManagerDto;
+import pl.lodz.p.pas.dto.user.AdminDto;
+import pl.lodz.p.pas.dto.user.ClientDto;
+import pl.lodz.p.pas.dto.user.ManagerDto;
+import pl.lodz.p.pas.dto.user.PasswordDto;
 import pl.lodz.p.pas.manager.UserManager;
 
 @Path("/user")
 @Produces("application/json")
 @Consumes("application/json")
-public class UserService {
+@RequestScoped
+@RolesAllowed("admin")
+public class UserController {
 
-    @EJB
+    @Inject
     UserManager userManager;
 
     @GET
@@ -48,12 +53,26 @@ public class UserService {
 
     @GET
     @Path("/login-search")
+    @RolesAllowed({"admin", "manager"})
     public Response findByLoginContains(@QueryParam("login") String login) {
         return Response.ok(userManager.findByLoginContains(login)).build();
     }
 
+    @PUT
+    @Path("password/{id}")
+    @RolesAllowed({"admin", "manager", "client"})
+    public Response changePassword(@PathParam("id") @Min(0) Long id,
+                                   @Valid PasswordDto passwordDto) {
+        if (userManager.changePassword(id, passwordDto)) {
+            return Response.status(Response.Status.OK).build();
+        }
+
+        return Response.status(Response.Status.UNAUTHORIZED).build();
+    }
+
     @GET
     @Path("/name-search")
+    @RolesAllowed({"admin", "manager"})
     public Response findByNameContains(@QueryParam("name") String name) {
         return Response.ok(userManager.findByNameContains(name)).build();
     }

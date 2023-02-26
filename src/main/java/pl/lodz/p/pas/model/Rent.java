@@ -11,10 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Version;
+import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -29,20 +28,18 @@ import pl.lodz.p.pas.model.user.Client;
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode(of = "rentId")
 @AllArgsConstructor
 @Entity
-public class Rent {
+public class Rent extends AbstractEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long rentId;
+    private Long rentId;
 
-    @Version
-    private long version;
-
+    @NotNull
     private LocalDateTime beginTime;
 
+    @Future
     private LocalDateTime endTime;
 
     @NotNull

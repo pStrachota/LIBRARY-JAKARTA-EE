@@ -1,4 +1,4 @@
-package pl.lodz.p.pas.dto;
+package pl.lodz.p.pas.dto.user;
 
 import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -8,14 +8,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDto {
+public class PasswordDto {
 
     @NotBlank
-    private String name;
-
+    private String oldPassword;
     @NotBlank
-    private String surname;
-
-    @NotBlank
-    private String login;
+    private String newPassword;
 }

@@ -1,6 +1,8 @@
-package pl.lodz.p.pas.service;
+package pl.lodz.p.pas.controller;
 
-import javax.ejb.EJB;
+import javax.annotation.security.RolesAllowed;
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.ws.rs.Consumes;
@@ -13,21 +15,24 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
-import pl.lodz.p.pas.dto.ArticleDto;
-import pl.lodz.p.pas.dto.BookDto;
+import pl.lodz.p.pas.dto.resource.ArticleDto;
+import pl.lodz.p.pas.dto.resource.BookDto;
 import pl.lodz.p.pas.manager.RentableItemManager;
 
 
 @Path("/rentable-item")
 @Produces("application/json")
 @Consumes("application/json")
-public class RentableItemService {
+@RequestScoped
+@RolesAllowed({"admin", "manager"})
+public class RentableItemController {
 
-    @EJB
+    @Inject
     RentableItemManager rentableItemManager;
 
     @GET
     @Produces("application/json")
+    @RolesAllowed({"admin", "manager", "client"})
     public Response getAllRentableItems() {
         return Response.ok(rentableItemManager.getRentableItems()).build();
     }

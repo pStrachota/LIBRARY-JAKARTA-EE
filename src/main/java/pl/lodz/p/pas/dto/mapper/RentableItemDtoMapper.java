@@ -1,8 +1,8 @@
 package pl.lodz.p.pas.dto.mapper;
 
-import pl.lodz.p.pas.dto.ArticleDto;
-import pl.lodz.p.pas.dto.BookDto;
-import pl.lodz.p.pas.dto.RentableItemDto;
+import pl.lodz.p.pas.dto.resource.ArticleDto;
+import pl.lodz.p.pas.dto.resource.BookDto;
+import pl.lodz.p.pas.dto.resource.RentableItemDto;
 import pl.lodz.p.pas.model.resource.Article;
 import pl.lodz.p.pas.model.resource.Book;
 import pl.lodz.p.pas.model.resource.RentableItem;
