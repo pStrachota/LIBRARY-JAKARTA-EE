@@ -30,39 +30,39 @@ public class InitRepoData {
 
     @PostConstruct
     public void init() {
-        rentableItemManager.addRentableItem(BookDto.builder().title("Balladyna")
-                .author("Juliusz Słowacki").publishingHouse("PWN").serialNumber("1111111111111")
+        rentableItemManager.addRentableItem(BookDto.builder().title("Ballads and romances")
+                .author("Adam Mickiewicz").publishingHouse("PWN").serialNumber("1111111111111")
                 .build());
-        rentableItemManager.addRentableItem(BookDto.builder().title("Władca pierścieni")
-                .author("J.R.R. Tolkien").publishingHouse("Muza").serialNumber("2222222222222")
+        rentableItemManager.addRentableItem(BookDto.builder().title("Lord of the rings")
+                .author("J.R.R. Tolkien").publishingHouse("Ontario").serialNumber("2222222222222")
                 .build());
-        rentableItemManager.addRentableItem(BookDto.builder().title("Harry Potter i Zakon Feniksa")
+        rentableItemManager.addRentableItem(BookDto.builder().title("Harry Potter and the Order of the Phoenix")
                 .author("J.K Rowling").publishingHouse("Media").serialNumber("3333333333333")
                 .build());
-        rentableItemManager.addRentableItem(ArticleDto.builder().title("Różniczkowanie Feymana")
-                .author("Richard Feynman").serialNumber("4444444444444")
+        rentableItemManager.addRentableItem(BookDto.builder().title("Little women")
+                .author("L.M. Alcott").publishingHouse("PWN").serialNumber("4444444444444")
+                .build());
+        rentableItemManager.addRentableItem(ArticleDto.builder().title("The Feynman lectures of Physics")
+                .author("Richard Feynman").serialNumber("5555555555555")
                 .parentOrganisation("Unknown").build());
-        rentableItemManager.addRentableItem(ArticleDto.builder().title("Ewolucja Darwina")
-                .author("Charles Darwin").serialNumber("5555555555555")
-                .parentOrganisation("Unknown").build());
-        rentableItemManager.addRentableItem(ArticleDto.builder().title("Ogólna teoria względności")
+        rentableItemManager.addRentableItem(ArticleDto.builder().title("Theory of general relativity")
                 .author("Albert Einstein").serialNumber("6666666666666")
-                .parentOrganisation("Unknown").build());
+                .parentOrganisation("MIT Publishing").build());
 
-        userManager.addUser(AdminDto.builder().name("Jan").surname("Kowalski").login("admin123")
+        userManager.addUser(AdminDto.builder().name("John").surname("Doe").login("admin123")
                 .password("admin123").privileges("ALL")
                 .position("IT SPEC").build());
         userManager.addUser(
-                ManagerDto.builder().name("Krzysztof").surname("Wolski").login("manager123")
+                ManagerDto.builder().name("Adam").surname("Driver").login("manager123")
                         .password("manager123")
                         .position("BOSS").build());
         userManager.addUser(
-                ClientDto.builder().name("Jacek").surname("Wazowski").login("client123")
+                ClientDto.builder().name("Jane").surname("White").login("client123")
                         .password("client123")
                         .address(new Address("Piotrkowska", "Łódź", "123"))
                         .clientType(ClientType.STUDENT).build());
         userManager.addUser(
-                ClientDto.builder().name("Robert").surname("Lewandowski").login("client321")
+                ClientDto.builder().name("Robert").surname("Brown").login("client321")
                         .password("client321")
                         .address(new Address("Złota", "Warszawa", "123"))
                         .clientType(ClientType.UNIVERSITY_EMPLOYEE).build());

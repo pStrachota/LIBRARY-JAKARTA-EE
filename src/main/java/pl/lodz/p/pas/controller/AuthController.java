@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import javax.security.enterprise.credential.UsernamePasswordCredential;
 import javax.security.enterprise.identitystore.CredentialValidationResult;
 import javax.security.enterprise.identitystore.IdentityStoreHandler;
+import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
@@ -14,6 +15,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import pl.lodz.p.pas.dto.user.ClientDto;
+import pl.lodz.p.pas.manager.UserManager;
 import pl.lodz.p.pas.security.JwtUtils;
 
 
@@ -26,7 +29,24 @@ public class AuthController {
     private IdentityStoreHandler identityStoreHandler;
 
     @Inject
+    private UserManager userManager;
+
+    @Inject
     private JwtUtils jwtUtils;
+
+    @POST
+    @Path("/register")
+    @RolesAllowed("guest")
+    public Response register(@Valid ClientDto clientDto) {
+
+        if (userManager.checkIfLoginExist(clientDto.getLogin())) {
+            return Response.status(Response.Status.CONFLICT).build();
+        }
+
+        userManager.addUser(clientDto);
+
+        return Response.ok("User created successfully").build();
+    }
 
     @POST
     @Path("/login")

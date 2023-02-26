@@ -37,6 +37,6 @@
         <role-name>guest</role-name>
     </security-role>
 
-    <default-context-path>pas</default-context-path>
+<!--    <default-context-path>pas</default-context-path>-->
 
 </web-app>

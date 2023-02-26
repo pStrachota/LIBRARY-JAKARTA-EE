@@ -102,4 +102,8 @@ public class UserManager {
         userDbRepo.changePassword(id, hash);
         return true;
     }
+
+    public boolean checkIfLoginExist(String login) {
+        return userDbRepo.findByLogin(login).isPresent();
+    }
 }

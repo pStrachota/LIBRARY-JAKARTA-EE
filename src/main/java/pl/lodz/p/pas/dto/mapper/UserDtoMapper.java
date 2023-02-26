@@ -44,6 +44,7 @@ public class UserDtoMapper {
                     .surname(adminDto.getSurname())
                     .isActive(true)
                     .login(adminDto.getLogin())
+                    .password(password)
                     .privileges(adminDto.getPrivileges())
                     .position("ADMIN | " + adminDto.getPosition())
                     .build();
@@ -53,6 +54,7 @@ public class UserDtoMapper {
                     .name(managerDto.getName())
                     .surname(managerDto.getSurname())
                     .isActive(true)
+                    .password(password)
                     .login(managerDto.getLogin())
                     .position("MANAGER | " + managerDto.getPosition())
                     .build();

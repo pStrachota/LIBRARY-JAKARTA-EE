@@ -62,4 +62,11 @@ public class UserRepo extends Repo<User> {
         entityManager.merge(user);
     }
 
+    public Optional<User> findByLogin(String login) {
+        return entityManager
+                .createQuery("SELECT u FROM User u WHERE u.login = :login", User.class)
+                .setParameter("login", login)
+                .getResultStream()
+                .findFirst();
+    }
 }
