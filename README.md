@@ -61,10 +61,10 @@
 * [JDK 17](https://docs.microsoft.com/en-us/dotnet/csharp/)
 * [Jakarta EE](https://jakarta.ee/)
 * [Hibernate](https://hibernate.org/orm/documentation/)
-* [MySQL]
-* [Docker]
-* [Payara Server]
-* [Rest Assured]
+* [MySQL](https://dev.mysql.com/doc/)
+* [Docker](https://docs.docker.com/)
+* [Payara Server](https://docs.payara.fish/)
+* [Rest Assured](https://rest-assured.io/)
 * [Lombok](https://www.projectlombok.org/features/all)
 
 
